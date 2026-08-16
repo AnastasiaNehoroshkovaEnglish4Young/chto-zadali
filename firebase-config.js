@@ -15,6 +15,29 @@
   const database = app.database();
   const studentsRef = database.ref('students');
   const STORAGE_KEY = 'chtoZadaliDataV1';
+  const TASK_TYPE_IMAGES = {
+    make: 'assets/student-ui/task-types/task-do.png',
+    online: 'assets/student-ui/task-types/task-online.png',
+    media: 'assets/student-ui/task-types/task-watch-listen.png',
+    learn: 'assets/student-ui/task-types/task-learn-repeat.png',
+    read: 'assets/student-ui/task-types/task-read.png',
+    other: 'assets/student-ui/task-types/task-other.png'
+  };
+
+  function taskTypeKey(value) {
+    const source = String(value || '').trim().toLocaleLowerCase('ru').replace(/ё/g, 'е');
+    const compact = source.replace(/[\s_\-/]+/g, '');
+    if (compact === 'make' || compact === 'do' || source.includes('сделать')) return 'make';
+    if (compact === 'online' || source.includes('онлайн')) return 'online';
+    if (['media', 'watch', 'listen', 'watchlisten', 'video'].includes(compact) || /видео|посмотр|послуш/.test(source)) return 'media';
+    if (['learn', 'repeat', 'learnrepeat'].includes(compact) || /выуч|повтор/.test(source)) return 'learn';
+    if (compact === 'read' || source.includes('прочит')) return 'read';
+    return 'other';
+  }
+
+  function taskTypeImage(value) {
+    return TASK_TYPE_IMAGES[taskTypeKey(value)] || TASK_TYPE_IMAGES.other;
+  }
 
   function normalizeTasks(tasks) {
     const values = Array.isArray(tasks) ? tasks : Object.values(tasks || {});
@@ -179,5 +202,5 @@
     });
   }
 
-  window.FirebaseStore = { database, studentsRef, migrateLocalDataOnce, migrateHomeworkStructureOnce, grantCompletedHomeworkCoins, toggleTaskCompletionAndGrant, normalizeTasks, tasksToRecord };
+  window.FirebaseStore = { database, studentsRef, migrateLocalDataOnce, migrateHomeworkStructureOnce, grantCompletedHomeworkCoins, toggleTaskCompletionAndGrant, normalizeTasks, tasksToRecord, taskTypeKey, taskTypeImage };
 }());

@@ -23,21 +23,18 @@
     </div>
 
     <section class="hero">
-      <h1 id="studentGreeting"></h1>
+      <div class="student-greeting-row"><h1 id="studentGreeting"></h1><img class="student-wave-hand" src="assets/student-ui/wave-hand.png" alt="Машущая рука"></div>
       <p>Вот что нужно сделать к следующему занятию.</p>
       <div class="next-lesson" id="studentLesson"></div>
     </section>
 
     <section class="student-mission" aria-labelledby="studentMissionTitle">
       <div class="student-mission-copy">
-        <div class="eyebrow">ТВОЯ МИССИЯ</div>
-        <h2 id="studentMissionTitle">Зарабатывай DomoCoin!</h2>
-        <p>Выполняй домашки, отмечай готовые задания и получай монетки!</p>
-        <div class="student-mission-route" aria-label="Как заработать DomoCoin">
-          <span><b>✓</b> Выполни домашку</span><i>→</i><span><img src="assets/pet/domocoin.png" alt=""> Получи DomoCoin</span><i>→</i><span><b>🐾</b> Купи предмет питомцу</span>
-        </div>
+        <div class="eyebrow">ТВОЯ ИГРОВАЯ ЦЕЛЬ</div>
+        <h2 id="studentMissionTitle">МИССИЯ</h2>
+        <p>Выполняй домашки от учителя, отмечай выполненные задания и получай <strong>DomoCoin</strong> за полностью выполненную домашку. На монетки ты сможешь покупать предметы и обустраивать комнату своего питомца. Когда комната будет полностью обустроена, ты перейдёшь на <strong>следующий уровень</strong> — там тебя будут ждать <strong>новый питомец</strong> и новая комната!</p>
       </div>
-      <div class="student-mission-coin"><img src="assets/pet/domocoin.png" alt="DomoCoin"></div>
+      <div class="student-mission-art"><img src="assets/student-ui/next-level-pet.png" alt="Новый питомец следующего уровня"></div>
     </section>
 
     <section class="student-progress">
@@ -48,16 +45,16 @@
     <aside class="student-pet-journey" aria-labelledby="petJourneyTitle">
       <h2 id="petJourneyTitle">Твой путь к новому питомцу</h2>
       <div class="student-journey-steps">
-        <article><span class="student-journey-number">1</span><span class="student-journey-symbol" aria-hidden="true">✓</span><strong>Выполняй домашки</strong></article>
+        <article><span class="student-journey-number">1</span><img src="assets/student-ui/task-checklist.png" alt="Список домашних заданий"><strong>Выполняй домашки</strong></article>
         <article><span class="student-journey-number">2</span><img src="assets/pet/domocoin.png" alt="DomoCoin"><strong>Зарабатывай <em>DomoCoin</em></strong></article>
-        <article><span class="student-journey-number">3</span><span class="student-journey-symbol" aria-hidden="true">🐾</span><strong>Обустрой комнату</strong></article>
+        <article><span class="student-journey-number">3</span><img src="assets/student-ui/pet-room.png" alt="Комната питомца"><strong>Обустраивай комнату</strong></article>
       </div>
-      <p>Когда комната будет полностью обустроена, откроется <strong>новый уровень</strong> — <strong>новый питомец</strong> и новая комната!</p>
+      <p>Полностью обустрой комнату → открой <strong>новый уровень</strong> и <strong>нового питомца</strong>!</p>
     </aside>
 
     <section class="student-game-cards" aria-label="Игровой прогресс">
       <article class="student-game-card wallet-card">
-        <div class="game-card-copy"><div class="eyebrow">МОЯ КОПИЛКА</div><h2>Моя копилка</h2><p>Монетки за выполненные домашки</p></div>
+        <div class="game-card-copy"><div class="eyebrow">МОЯ КОПИЛКА</div><h2>Моя копилка</h2><p>Монетки за полностью выполненные домашки</p></div>
         <div class="wallet-balance"><img src="assets/pet/domocoin.png" alt="DomoCoin"><div><strong id="studentCoinsBalance">0</strong><span>DomoCoin</span></div></div>
       </article>
       <article class="student-game-card student-pet-card">
@@ -67,7 +64,7 @@
     </section>
 
     <div class="tasks-title">
-      <div><div class="eyebrow">ДОМАШНЕЕ ЗАДАНИЕ</div><h2>Что нужно сделать</h2><p>Выполни задания ниже, чтобы заработать DomoCoin</p></div>
+      <div><div class="eyebrow">ДОМАШНЕЕ ЗАДАНИЕ</div><h2>Что нужно сделать</h2><p>Выполни все задания — и заработай DomoCoin!</p></div>
       <span id="studentRemaining"></span>
     </div>
 

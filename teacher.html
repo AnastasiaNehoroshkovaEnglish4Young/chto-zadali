@@ -27,10 +27,9 @@
 
   <main class="main">
     <div class="topbar">
-      <div>
-        <div class="eyebrow">РАБОЧАЯ ЗОНА</div>
-        <h2>Задать домашку</h2>
-        <p class="subtitle">Соберите задания — ученик увидит их на своей странице.</p>
+      <div class="teacher-heading">
+        <img class="teacher-heading-art" src="assets/student-ui/task-checklist.png" alt="">
+        <div><div class="eyebrow">РАБОЧАЯ ЗОНА</div><h2>Задать домашку</h2><p class="subtitle">Соберите задания — ученик увидит их на своей странице.</p></div>
       </div>
       <button class="teacher-pill" id="teacherProfileButton" type="button" aria-haspopup="dialog"><span class="teacher-dot" id="teacherHeaderAvatar">👩‍🏫</span><span id="teacherHeaderName">Анастасия</span></button>
     </div>
@@ -66,11 +65,10 @@
         <div id="homeworkList" aria-live="polite"></div>
         <div class="editor-footer-actions">
           <button class="danger-btn homework-delete" id="deleteHomeworkButton" type="button">Удалить эту домашку</button>
-          <a class="student-view-link" id="studentViewLink" href="student.html">Посмотреть глазами ученика ↗</a>
           <button class="publish" id="publishButton" type="button">Опубликовать домашку</button>
         </div>
         </div>
-        <div class="editor-empty" id="homeworkEditorEmpty"><span>📝</span><h3>Создайте домашнюю работу</h3><p>Нажмите «Новая домашка» справа, чтобы открыть чистую форму.</p></div>
+        <div class="editor-empty" id="homeworkEditorEmpty"><img src="assets/student-ui/task-checklist.png" alt="Чек-лист домашней работы"><h3>Создайте домашнюю работу</h3><p>Нажмите «Новая домашка», чтобы открыть чистую форму.</p><small>Выберите ученика, добавьте задания и опубликуйте их в его кабинете.</small></div>
       </section>
 
       <aside class="panel homework-history-panel">
@@ -78,6 +76,7 @@
           <div class="history-student"><span class="history-student-avatar" id="historyStudentAvatar">👦</span><div><strong id="historyStudentName">Выберите ученика</strong><small>История домашних работ</small></div></div>
           <button class="add-btn" id="newHomeworkButton" type="button">＋ Новая домашка</button>
         </div>
+        <a class="history-student-view" id="studentViewLink" target="_blank" rel="noopener noreferrer" hidden><span aria-hidden="true">◉</span>Посмотреть глазами ученика</a>
         <div class="history-stats" id="historyStats">0 домашних работ</div>
         <div class="homework-tabs" id="homeworkTabs" aria-live="polite"></div>
         <div hidden aria-hidden="true">
