@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Что задали? — UI прототип</title>
+<style>
+body{margin:0;font-family:Inter,"Segoe UI",system-ui,sans-serif;background:#f6f7fb;color:#202431}
+.wrap{max-width:900px;margin:70px auto;padding:24px}
+.card{background:#fff;border:1px solid #e7e9ef;border-radius:28px;padding:34px;box-shadow:0 20px 50px rgba(45,48,80,.08)}
+h1{font-size:40px;margin:0 0 10px}p{color:#6b7280;font-size:17px}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+a{display:block;text-decoration:none;color:#1f2937;background:#fafaff;border:1px solid #e3dfff;border-radius:20px;padding:24px;font-weight:800}
+a span{display:block;font-size:13px;color:#7b70d9;margin-top:7px}
+@media(max-width:650px){.links{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Что задали?</h1>
+    <p>Первый визуальный прототип двух страниц. Пока без базы данных и настоящих кнопок — только внешний вид.</p>
+    <div class="links">
+      <a href="teacher.html">👩‍🏫 Кабинет учителя<span>Задать домашку</span></a>
+      <a href="student.html">👦 Страница ученика<span>Моя домашка</span></a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

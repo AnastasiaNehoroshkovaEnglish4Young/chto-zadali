@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Что задали? — кабинет учителя</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js" defer></script>
+  <script src="firebase-config.js" defer></script>
+  <script src="teacher.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">✓</div>
+      <div><h1>Что задали?</h1><small>кабинет учителя</small></div>
+    </div>
+
+    <div class="nav-label">Ученики</div>
+    <div class="student-list">
+      <div id="sidebarStudents"></div>
+      <button class="add-student" id="addStudentButton" type="button">＋ Добавить ученика</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="eyebrow">РАБОЧАЯ ЗОНА</div>
+        <h2>Задать домашку</h2>
+        <p class="subtitle">Соберите задания — ученик увидит их на своей странице.</p>
+      </div>
+      <button class="teacher-pill" id="teacherProfileButton" type="button" aria-haspopup="dialog"><span class="teacher-dot" id="teacherHeaderAvatar">👩‍🏫</span><span id="teacherHeaderName">Анастасия</span></button>
+    </div>
+
+    <div class="grid teacher-workspace">
+      <section class="panel homework-editor-panel">
+        <div class="homework-view" id="homeworkView" hidden>
+          <div class="homework-view-header"><div><div class="eyebrow">ПРОСМОТР ДОМАШКИ</div><h3 id="homeworkViewTitle">Домашняя работа</h3><p id="homeworkViewMeta"></p></div><div class="homework-view-actions"><button class="cancel-btn" id="closeHomeworkView" type="button">Новая домашка</button><button class="add-btn" id="editHomeworkButton" type="button">Редактировать домашку</button></div></div>
+          <div class="homework-view-progress"><div class="progress-top"><span>Общий прогресс</span><strong id="homeworkViewProgressText">0 из 0</strong></div><div class="progress"><span id="homeworkViewProgressBar"></span></div></div>
+          <div class="homework-view-tasks" id="homeworkViewTasks"></div>
+        </div>
+        <div id="homeworkEditor">
+        <h3>1. Кому и к какому уроку</h3>
+        <div class="fields">
+          <div class="field">
+            <label>УЧЕНИК</label>
+            <select class="real-input" id="studentSelect" aria-label="Выберите ученика"></select>
+          </div>
+          <div class="field">
+            <label>СЛЕДУЮЩИЙ УРОК</label>
+            <div class="lesson-inputs">
+              <input class="real-input" id="lessonDate" type="date" aria-label="Дата следующего урока">
+              <input class="real-input" id="lessonTime" type="time" aria-label="Время следующего урока">
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <h3>2. Что нужно сделать</h3>
+          <button class="add-btn" id="addTaskButton" type="button">＋ Добавить задание</button>
+        </div>
+
+        <div id="homeworkList" aria-live="polite"></div>
+        <div class="editor-footer-actions">
+          <button class="danger-btn homework-delete" id="deleteHomeworkButton" type="button">Удалить эту домашку</button>
+          <a class="student-view-link" id="studentViewLink" href="student.html">Посмотреть глазами ученика ↗</a>
+          <button class="publish" id="publishButton" type="button">Опубликовать домашку</button>
+        </div>
+        </div>
+        <div class="editor-empty" id="homeworkEditorEmpty"><span>📝</span><h3>Создайте домашнюю работу</h3><p>Нажмите «Новая домашка» справа, чтобы открыть чистую форму.</p></div>
+      </section>
+
+      <aside class="panel homework-history-panel">
+        <div class="history-heading">
+          <div class="history-student"><span class="history-student-avatar" id="historyStudentAvatar">👦</span><div><strong id="historyStudentName">Выберите ученика</strong><small>История домашних работ</small></div></div>
+          <button class="add-btn" id="newHomeworkButton" type="button">＋ Новая домашка</button>
+        </div>
+        <div class="history-stats" id="historyStats">0 домашних работ</div>
+        <div class="homework-tabs" id="homeworkTabs" aria-live="polite"></div>
+        <div hidden aria-hidden="true">
+          <div class="student-head">
+            <div class="big-avatar" id="previewStudentAvatar">👦</div>
+            <div><h4 id="previewGreeting"></h4><small id="previewLesson"></small></div>
+          </div>
+          <span id="previewCount"></span><span id="previewProgress"></span>
+          <div id="previewList" class="preview-list"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="publishToast" role="status" aria-live="polite">✓ Домашка опубликована</div>
+<div class="toast" id="copyStudentLinkToast" role="status" aria-live="polite">Ссылка ученика скопирована</div>
+<div class="modal work-image-modal" id="teacherWorkImageModal" hidden><div class="modal-backdrop" data-close-modal></div><section class="modal-dialog work-image-dialog" role="dialog" aria-modal="true" aria-label="Работа ученика"><button class="modal-close" type="button" aria-label="Закрыть" data-close-modal>×</button><img id="teacherWorkImageLarge" alt="Работа ученика"></section></div>
+
+<div class="modal" id="teacherProfileModal" hidden>
+  <div class="modal-backdrop" data-close-modal></div>
+  <section class="modal-dialog modal-dialog-small" role="dialog" aria-modal="true" aria-labelledby="teacherProfileTitle">
+    <button class="modal-close" type="button" aria-label="Закрыть" data-close-modal>×</button>
+    <div class="eyebrow">ПРОФИЛЬ УЧИТЕЛЯ</div><h2 id="teacherProfileTitle">Мой профиль</h2>
+    <form id="teacherProfileForm">
+      <div class="teacher-avatar-editor">
+        <div class="teacher-avatar-preview" id="teacherAvatarPreview">👩‍🏫</div>
+        <div class="teacher-avatar-controls"><label class="avatar-upload-button" for="teacherAvatarInput">Выбрать фото</label><input id="teacherAvatarInput" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden><button class="avatar-remove-button" id="removeTeacherAvatar" type="button">Удалить фото</button><small>JPG, PNG или WebP, до 8 МБ — изображение уменьшится автоматически</small></div>
+      </div>
+      <div class="profile-file-error" id="teacherProfileError" role="alert"></div>
+      <div class="form-field"><label for="teacherDisplayName">Как показывать ваше имя ученикам</label><input id="teacherDisplayName" name="displayName" required maxlength="80" autocomplete="off" placeholder="Например, Анастасия Сергеевна"></div>
+      <div class="form-actions"><button class="cancel-btn" type="button" data-close-modal>Отмена</button><button class="add-btn" id="saveTeacherProfile" type="submit">Сохранить</button></div>
+    </form>
+  </section>
+</div>
+
+<div class="modal" id="teacherStudentAvatarModal" hidden>
+  <div class="modal-backdrop" data-close-modal></div>
+  <section class="modal-dialog avatar-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="teacherStudentAvatarTitle">
+    <button class="modal-close" type="button" aria-label="Закрыть" data-close-modal>×</button>
+    <div class="eyebrow">ПРОФИЛЬ УЧЕНИКА</div><h2 id="teacherStudentAvatarTitle">Выбери аватар</h2><p class="modal-hint" id="teacherStudentAvatarHint"></p>
+    <div id="teacherStudentAvatarGroups"></div><div class="profile-file-error" id="teacherStudentAvatarError" role="alert"></div>
+    <div class="form-actions"><button class="cancel-btn" type="button" data-close-modal>Отмена</button><button class="add-btn" id="saveTeacherStudentAvatar" type="button">Сохранить</button></div>
+  </section>
+</div>
+
+<div class="modal" id="studentModal" hidden>
+  <div class="modal-backdrop" data-close-modal></div>
+  <section class="modal-dialog modal-dialog-small" role="dialog" aria-modal="true" aria-labelledby="studentModalTitle">
+    <button class="modal-close" type="button" aria-label="Закрыть" data-close-modal>×</button>
+    <div class="eyebrow" id="studentModalEyebrow">НОВЫЙ УЧЕНИК</div>
+    <h2 id="studentModalTitle">Добавить ученика</h2>
+    <form id="studentForm">
+      <div class="form-field">
+        <label for="studentName">Имя ученика</label>
+        <input id="studentName" name="name" required maxlength="80" autocomplete="off" placeholder="Например, София Иванова">
+      </div>
+      <div class="form-actions">
+        <button class="cancel-btn" type="button" data-close-modal>Отмена</button>
+        <button class="add-btn" id="studentSubmitButton" type="submit">Добавить</button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<div class="modal" id="deleteStudentModal" hidden>
+  <div class="modal-backdrop" data-close-modal></div>
+  <section class="modal-dialog modal-dialog-small" role="dialog" aria-modal="true" aria-labelledby="deleteStudentTitle">
+    <button class="modal-close" type="button" aria-label="Закрыть" data-close-modal>×</button>
+    <div class="delete-symbol">🗑️</div>
+    <h2 id="deleteStudentTitle">Удалить ученика?</h2>
+    <p class="modal-hint" id="deleteStudentText"></p>
+    <div class="form-actions">
+      <button class="cancel-btn" type="button" data-close-modal>Отмена</button>
+      <button class="danger-btn" id="confirmDeleteStudent" type="button">Удалить</button>
+    </div>
+  </section>
+</div>
+
+<div class="modal" id="typeModal" hidden>
+  <div class="modal-backdrop" data-close-modal></div>
+  <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="typeModalTitle">
+    <button class="modal-close" type="button" aria-label="Закрыть" data-close-modal>×</button>
+    <div class="eyebrow">НОВОЕ ЗАДАНИЕ</div>
+    <h2 id="typeModalTitle">Выберите тип задания</h2>
+    <p class="modal-hint">Так ученику будет проще сразу понять, что предстоит сделать.</p>
+    <div class="task-type-grid" id="taskTypeGrid"></div>
+  </section>
+</div>
+
+<div class="modal" id="taskModal" hidden>
+  <div class="modal-backdrop" data-close-modal></div>
+  <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+    <button class="modal-close" type="button" aria-label="Закрыть" data-close-modal>×</button>
+    <div class="selected-type" id="selectedType"></div>
+    <h2 id="taskModalTitle">Добавить задание</h2>
+    <form id="taskForm">
+      <div class="form-field">
+        <label for="taskTitle">Название</label>
+        <input id="taskTitle" name="title" required maxlength="100" placeholder="Например, Повтори новые слова">
+      </div>
+      <div class="form-field">
+        <label for="taskDescription">Что нужно сделать</label>
+        <textarea id="taskDescription" name="description" required maxlength="500" rows="4" placeholder="Опишите задание для ученика"></textarea>
+      </div>
+      <div class="form-field" id="linkField" hidden>
+        <label for="taskLink">Ссылка <span id="linkOptional"></span></label>
+        <input id="taskLink" name="link" type="url" placeholder="https://example.com">
+      </div>
+      <div class="form-field" id="fileField" hidden>
+        <label>Прикрепить файл</label>
+        <button class="file-placeholder" type="button" disabled>📎 Выбрать файл <span>Скоро</span></button>
+        <small>Загрузка файлов появится позже</small>
+      </div>
+      <div class="form-actions">
+        <button class="cancel-btn" type="button" data-close-modal>Отмена</button>
+        <button class="add-btn" type="submit" id="submitTaskButton">Добавить</button>
+      </div>
+    </form>
+  </section>
+</div>
+</body>
+</html>

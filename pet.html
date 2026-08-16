@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Что задали? — Мой котик</title><link rel="stylesheet" href="styles.css">
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js" defer></script><script src="firebase-config.js" defer></script><script src="pet.js" defer></script></head>
+<body><main class="pet-page"><div class="pet-shell">
+<header class="pet-header"><div><div class="eyebrow">ТВОЙ ПИТОМЕЦ</div><h1>Мой котик</h1><p>Выполняй домашние работы и обустраивай комнату котика.</p></div><a class="pet-back" id="backToHomework" href="student.html">← Назад к домашке</a></header>
+<div class="pet-message" id="petMessage" role="status" aria-live="polite"></div>
+<section class="pet-stats" aria-label="Статистика комнаты"><div class="pet-stat"><span class="pet-stat-icon"><img class="domocoin-balance-icon" src="assets/pet/domocoin.png" alt=""></span><div><small>DOMOCOIN</small><strong id="coinsBalance">0</strong></div></div><div class="pet-stat"><span class="pet-stat-icon pet-level-icon">★</span><div><small>ПРОГРЕСС</small><strong id="roomProgress">Комната: 0 из 8 предметов</strong></div></div></section>
+<section class="pet-room-card"><div class="pet-room" id="petRoom" aria-label="Комната котика"><img class="pet-room-background" src="assets/pet/room-base.png" alt="Комната с рыжим котиком"></div></section>
+<section class="pet-complete" id="petComplete" hidden><div class="pet-complete-icon">🎉</div><div><h2>Уровень 1 пройден!</h2><p>Ты полностью обустроил комнату своего котика!</p><small>Новое приключение скоро откроется…</small></div></section>
+<section class="pet-shop" aria-labelledby="shopTitle"><div class="pet-shop-heading"><div class="eyebrow">ОБУСТРОЙ КОМНАТУ</div><h2 id="shopTitle">Магазин для котика</h2></div><div class="pet-shop-grid" id="petShop"></div></section>
+</div></main></body></html>

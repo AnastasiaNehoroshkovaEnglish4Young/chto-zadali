@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Что задали? — домашка ученика</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js" defer></script>
+  <script src="firebase-config.js" defer></script>
+  <script src="student.js" defer></script>
+</head>
+<body>
+<div class="student-page">
+  <section class="student-missing" id="studentMissing" hidden><div class="student-missing-icon">🔗</div><h1>Ученик не выбран</h1><p>Откройте персональную ссылку на кабинет.</p><a href="index.html">Вернуться на главную</a></section>
+  <div class="student-shell" id="studentShell">
+    <div class="student-top">
+      <a class="student-logo" href="index.html"><div class="brand-mark">✓</div> Что задали?</a>
+      <div class="student-top-actions">
+        <div class="student-teacher-badge"><span class="student-teacher-avatar" id="studentTeacherAvatar">👩‍🏫</span><span><strong id="studentTeacherName">Анастасия</strong><small>Твой учитель</small></span></div>
+        <div class="student-profile student-avatar-trigger"><button class="student-profile-avatar" id="studentProfileAvatar" type="button" aria-label="Изменить аватар" aria-haspopup="dialog">👦</button><span id="studentProfileName">Ученик</span><span class="avatar-edit-hint">✎ Изменить аватар</span></div>
+      </div>
+    </div>
+
+    <section class="hero">
+      <h1 id="studentGreeting"></h1>
+      <p>Вот что нужно сделать к следующему занятию.</p>
+      <div class="next-lesson" id="studentLesson"></div>
+    </section>
+
+    <section class="student-progress">
+      <div class="progress-top"><span>Твой прогресс</span><span id="studentProgressText"></span></div>
+      <div class="progress"><span id="studentProgressBar"></span></div>
+    </section>
+
+    <section class="student-game-cards" aria-label="Игровой прогресс">
+      <article class="student-game-card wallet-card">
+        <div class="game-card-copy"><div class="eyebrow">МОЯ КОПИЛКА</div><h2>Моя копилка</h2><p>За полностью выполненные домашки</p></div>
+        <div class="wallet-balance"><img src="assets/pet/domocoin.png" alt="DomoCoin"><div><strong id="studentCoinsBalance">0</strong><span>DomoCoin</span></div></div>
+      </article>
+      <article class="student-game-card student-pet-card">
+        <div class="student-pet-preview"><img src="assets/pet/room-base.png" alt="Комната рыжего котика"></div>
+        <div class="student-pet-content"><div class="eyebrow">МОЙ ПИТОМЕЦ</div><h2>Мой питомец</h2><p id="studentPetProgress">Комната: 0 из 8</p><a class="student-pet-button" id="petLink" href="pet.html">Зайти к котику</a></div>
+      </article>
+    </section>
+
+    <div class="tasks-title">
+      <div><div class="eyebrow">ДОМАШНЕЕ ЗАДАНИЕ</div><h2>Что нужно сделать</h2></div>
+      <span id="studentRemaining"></span>
+    </div>
+
+    <section class="task-grid" id="studentTasks" aria-live="polite"></section>
+    <div class="footer-note" id="studentMessage"></div>
+    <section id="otherHomeworks" class="other-homeworks" aria-live="polite"></section>
+  </div>
+</div>
+<div class="modal avatar-picker-modal" id="studentAvatarModal" hidden>
+  <div class="modal-backdrop" data-close-avatar-modal></div>
+  <section class="modal-dialog avatar-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="studentAvatarTitle">
+    <button class="modal-close" type="button" aria-label="Закрыть" data-close-avatar-modal>×</button>
+    <div class="eyebrow">ТВОЙ ПРОФИЛЬ</div><h2 id="studentAvatarTitle">Выбери аватар</h2><p class="modal-hint">Можно выбрать любую картинку — имя останется прежним.</p>
+    <div id="studentAvatarGroups"></div>
+    <div class="profile-file-error" id="studentAvatarError" role="alert"></div>
+    <div class="form-actions"><button class="cancel-btn" type="button" data-close-avatar-modal>Отмена</button><button class="add-btn" id="saveStudentAvatar" type="button">Сохранить</button></div>
+  </section>
+</div>
+<div class="modal work-image-modal" id="studentWorkImageModal" hidden><div class="modal-backdrop" data-close-work-image></div><section class="modal-dialog work-image-dialog" role="dialog" aria-modal="true" aria-label="Письменная работа"><button class="modal-close" type="button" aria-label="Закрыть" data-close-work-image>×</button><img id="studentWorkImageLarge" alt="Письменная работа ученика"></section></div>
+</body>
+</html>
