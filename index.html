@@ -9,8 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .landing-page{min-height:100vh;padding:clamp(24px,5vw,72px) 20px;background:radial-gradient(circle at 15% 10%,var(--color-primary-light) 0,transparent 28%),radial-gradient(circle at 88% 18%,var(--color-mint) 0,transparent 24%),var(--color-background);overflow:hidden}
-    .landing-shell{width:min(1080px,100%);margin:0 auto}
+    .landing-page{position:relative;min-height:100vh;padding:clamp(24px,5vw,72px) 20px;background-image:url("assets/backgrounds/bg-main-soft.png");background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;overflow:hidden}
+    .landing-page:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.68),rgba(250,248,245,.76));pointer-events:none}
+    .landing-shell{position:relative;z-index:1;width:min(1080px,100%);margin:0 auto}
     .landing-brand{display:inline-flex;align-items:center;gap:12px;color:var(--color-text);font-weight:900;font-size:18px;text-decoration:none}
     .landing-brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;color:#fff;background:var(--color-primary);box-shadow:0 10px 24px rgba(110,86,207,.24)}
     .landing-hero{text-align:center;padding:clamp(52px,8vw,96px) 0 clamp(38px,6vw,64px)}
@@ -32,7 +33,7 @@
     .landing-features{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:32px auto 0;padding:0;list-style:none}
     .landing-features li{display:flex;align-items:center;gap:7px;padding:10px 14px;border:1px solid var(--color-border);border-radius:999px;background:rgba(255,255,255,.82);color:var(--color-text-muted);font-size:14px;font-weight:800}
     .landing-features span{color:var(--color-success)}
-    @media(max-width:720px){.landing-page{padding:20px 16px 40px}.landing-hero{padding:52px 0 36px}.landing-cards{grid-template-columns:1fr}.landing-card{min-height:290px}.landing-action{width:100%}.landing-features{justify-content:flex-start}}
+    @media(max-width:720px){.landing-page{padding:20px 16px 40px;background-attachment:scroll}.landing-hero{padding:52px 0 36px}.landing-cards{grid-template-columns:1fr}.landing-card{min-height:290px}.landing-action{width:100%}.landing-features{justify-content:flex-start}}
     @media(prefers-reduced-motion:reduce){.landing-card,.landing-action{transition:none}}
   </style>
 </head>
