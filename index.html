@@ -1,30 +1,69 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Что задали? — UI прототип</title>
-<style>
-body{margin:0;font-family:Inter,"Segoe UI",system-ui,sans-serif;background:#f6f7fb;color:#202431}
-.wrap{max-width:900px;margin:70px auto;padding:24px}
-.card{background:#fff;border:1px solid #e7e9ef;border-radius:28px;padding:34px;box-shadow:0 20px 50px rgba(45,48,80,.08)}
-h1{font-size:40px;margin:0 0 10px}p{color:#6b7280;font-size:17px}
-.links{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
-a{display:block;text-decoration:none;color:#1f2937;background:#fafaff;border:1px solid #e3dfff;border-radius:20px;padding:24px;font-weight:800}
-a span{display:block;font-size:13px;color:#7b70d9;margin-top:7px}
-@media(max-width:650px){.links{grid-template-columns:1fr}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Что задали? — сервис для учителя и ученика</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .landing-page{min-height:100vh;padding:clamp(24px,5vw,72px) 20px;background:radial-gradient(circle at 15% 10%,var(--color-primary-light) 0,transparent 28%),radial-gradient(circle at 88% 18%,var(--color-mint) 0,transparent 24%),var(--color-background);overflow:hidden}
+    .landing-shell{width:min(1080px,100%);margin:0 auto}
+    .landing-brand{display:inline-flex;align-items:center;gap:12px;color:var(--color-text);font-weight:900;font-size:18px;text-decoration:none}
+    .landing-brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;color:#fff;background:var(--color-primary);box-shadow:0 10px 24px rgba(110,86,207,.24)}
+    .landing-hero{text-align:center;padding:clamp(52px,8vw,96px) 0 clamp(38px,6vw,64px)}
+    .landing-eyebrow{display:inline-flex;padding:8px 15px;border-radius:999px;color:var(--color-primary);background:var(--color-primary-light);font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .landing-hero h1{margin:20px 0 12px;color:var(--color-text);font-size:clamp(48px,8vw,82px);line-height:.98;letter-spacing:-.055em}
+    .landing-subtitle{margin:0;color:var(--color-text);font-size:clamp(21px,3vw,29px);font-weight:800}
+    .landing-description{max-width:750px;margin:18px auto 0;color:var(--color-text-muted);font-size:clamp(16px,2vw,19px);line-height:1.7}
+    .landing-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+    .landing-card{display:flex;flex-direction:column;min-height:330px;padding:clamp(26px,4vw,40px);border:1px solid var(--color-border);border-radius:var(--radius-xl);background:var(--color-surface);box-shadow:var(--shadow-md);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+    .landing-card:hover{transform:translateY(-5px);border-color:var(--color-primary-light);box-shadow:var(--shadow-lg)}
+    .landing-card--student{background:linear-gradient(145deg,var(--color-surface),var(--color-mint))}
+    .landing-card-icon{display:grid;place-items:center;width:64px;height:64px;margin-bottom:24px;border-radius:20px;background:var(--color-primary-light);color:var(--color-primary);font-size:30px}
+    .landing-card--student .landing-card-icon{background:var(--color-mint);color:var(--color-text)}
+    .landing-card h2{margin:0 0 12px;font-size:clamp(24px,3vw,31px);color:var(--color-text)}
+    .landing-card p{margin:0 0 28px;color:var(--color-text-muted);font-size:16px;line-height:1.65}
+    .landing-action{display:inline-flex;align-items:center;justify-content:center;min-height:52px;margin-top:auto;padding:0 22px;border-radius:var(--radius-md);background:var(--color-primary);color:#fff;text-decoration:none;font-weight:900;box-shadow:0 10px 22px rgba(110,86,207,.22);transition:transform .18s ease,background .18s ease,box-shadow .18s ease}
+    .landing-action:hover{transform:translateY(-2px);background:var(--color-primary-hover);box-shadow:0 14px 28px rgba(110,86,207,.28)}
+    .landing-action:focus-visible{outline:3px solid var(--color-focus);outline-offset:3px}
+    .landing-features{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:32px auto 0;padding:0;list-style:none}
+    .landing-features li{display:flex;align-items:center;gap:7px;padding:10px 14px;border:1px solid var(--color-border);border-radius:999px;background:rgba(255,255,255,.82);color:var(--color-text-muted);font-size:14px;font-weight:800}
+    .landing-features span{color:var(--color-success)}
+    @media(max-width:720px){.landing-page{padding:20px 16px 40px}.landing-hero{padding:52px 0 36px}.landing-cards{grid-template-columns:1fr}.landing-card{min-height:290px}.landing-action{width:100%}.landing-features{justify-content:flex-start}}
+    @media(prefers-reduced-motion:reduce){.landing-card,.landing-action{transition:none}}
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="card">
-    <h1>Что задали?</h1>
-    <p>Первый визуальный прототип двух страниц. Пока без базы данных и настоящих кнопок — только внешний вид.</p>
-    <div class="links">
-      <a href="teacher.html">👩‍🏫 Кабинет учителя<span>Задать домашку</span></a>
-      <a href="student.html">👦 Страница ученика<span>Моя домашка</span></a>
+  <main class="landing-page">
+    <div class="landing-shell">
+      <a class="landing-brand" href="index.html" aria-label="Что задали? — главная"><span class="landing-brand-mark">✓</span><span>Что задали?</span></a>
+      <section class="landing-hero">
+        <span class="landing-eyebrow">Учёба становится понятнее</span>
+        <h1>Что задали?</h1>
+        <p class="landing-subtitle">Интерактивный сервис для учителя и ученика</p>
+        <p class="landing-description">Создавайте домашние задания, отслеживайте выполнение и мотивируйте учеников с помощью DomoCoin и игрового питомца.</p>
+      </section>
+      <section class="landing-cards" aria-label="Выбор кабинета">
+        <article class="landing-card">
+          <div class="landing-card-icon" aria-hidden="true">✎</div>
+          <h2>Кабинет учителя</h2>
+          <p>Создать домашнее задание, выбрать ученика и посмотреть его прогресс</p>
+          <a class="landing-action" href="teacher.html">Открыть кабинет учителя</a>
+        </article>
+        <article class="landing-card landing-card--student">
+          <div class="landing-card-icon" aria-hidden="true">★</div>
+          <h2>Кабинет ученика</h2>
+          <p>Посмотреть домашние задания, отметить выполнение, заработать DomoCoin и зайти к питомцу</p>
+          <a class="landing-action" href="student.html?id=student-1786866739611-kjg9m">Открыть демо ученика</a>
+        </article>
+      </section>
+      <ul class="landing-features" aria-label="Возможности сервиса">
+        <li><span>✓</span> Домашние задания</li><li><span>✓</span> Отслеживание прогресса</li><li><span>✓</span> Фото и файлы работы</li><li><span>✓</span> DomoCoin</li><li><span>✓</span> Игровой питомец</li>
+      </ul>
     </div>
-  </div>
-</div>
+  </main>
 </body>
 </html>
