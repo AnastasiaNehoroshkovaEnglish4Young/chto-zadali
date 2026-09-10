@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  const TEACHER_UID = 'bQSPH2M8I6Oqwz0pIKq2H2GqXly1';
   const firebaseConfig = {
     apiKey: 'AIzaSyBorlkbEGYsZYaFW1kPQnBunF5Rmo7rICU',
     authDomain: 'chto-zadali.firebaseapp.com',
@@ -23,6 +24,14 @@
     read: 'assets/student-ui/task-types/task-read.png',
     other: 'assets/student-ui/task-types/task-other.png'
   };
+
+  function isTeacherSession() {
+    try {
+      return typeof firebase.auth === 'function' && firebase.auth().currentUser?.uid === TEACHER_UID;
+    } catch (_) {
+      return false;
+    }
+  }
 
   function taskTypeKey(value) {
     const source = String(value || '').trim().toLocaleLowerCase('ru').replace(/ё/g, 'е');
@@ -96,6 +105,7 @@
   }
 
   async function migrateLocalDataOnce() {
+    if (!isTeacherSession()) return false;
     const migration = localStudents();
     if (!migration) return false;
     const result = await studentsRef.transaction((current) => {
@@ -107,6 +117,7 @@
   }
 
   async function migrateHomeworkStructureOnce() {
+    if (!isTeacherSession()) return false;
     return studentsRef.transaction((current) => {
       if (!current) return current;
       let changed = false;
