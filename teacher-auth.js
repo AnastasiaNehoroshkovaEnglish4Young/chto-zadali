@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  const TEACHER_UID = 'bQSPH2M8I6Oqwz0pIKq2H2GqXly1';
   const appRoot = document.querySelector('.app');
   if (!appRoot || !window.firebase || !firebase.auth) return;
 
@@ -32,6 +33,7 @@
 
   const auth = firebase.auth();
   const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
   const button = document.getElementById('teacherGoogleSignIn');
   const status = document.getElementById('teacherAuthStatus');
   let appLoaded = false;
@@ -48,17 +50,28 @@
     document.body.append(script);
   }
 
+  function showSignedOutState() {
+    button.disabled = false;
+    button.textContent = 'Войти через Google';
+    status.textContent = 'Нажмите кнопку и выберите ваш Google-аккаунт.';
+  }
+
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch((error) => {
     console.warn('Firebase Auth persistence:', error);
   });
 
   auth.onAuthStateChanged((user) => {
-    if (user) {
+    if (user && user.uid === TEACHER_UID) {
       loadTeacherApp();
       return;
     }
-    button.disabled = false;
-    status.textContent = 'Нажмите кнопку и выберите ваш Google-аккаунт.';
+    if (user) {
+      button.disabled = false;
+      button.textContent = 'Войти другим аккаунтом';
+      status.textContent = 'Этот Google-аккаунт не имеет доступа к кабинету учителя.';
+      return;
+    }
+    showSignedOutState();
   }, (error) => {
     console.error(error);
     button.disabled = false;
