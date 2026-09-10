@@ -5,6 +5,7 @@
   if (!appRoot || !window.firebase || !firebase.auth) return;
 
   appRoot.hidden = true;
+  appRoot.style.display = 'none';
 
   const style = document.createElement('style');
   style.textContent = `
@@ -40,6 +41,7 @@
     appLoaded = true;
     gate.remove();
     appRoot.hidden = false;
+    appRoot.style.display = '';
     const script = document.createElement('script');
     script.src = 'teacher.js';
     script.defer = true;
