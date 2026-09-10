@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  const TEACHER_UID = 'bQSPH2M8I6Oqwz0pIKq2H2GqXly1';
   const firebaseConfig = {
     apiKey: 'AIzaSyBorlkbEGYsZYaFW1kPQnBunF5Rmo7rICU',
     authDomain: 'chto-zadali.firebaseapp.com',
@@ -23,6 +24,14 @@
     read: 'assets/student-ui/task-types/task-read.png',
     other: 'assets/student-ui/task-types/task-other.png'
   };
+
+  function isTeacherSession() {
+    try {
+      return typeof firebase.auth === 'function' && firebase.auth().currentUser?.uid === TEACHER_UID;
+    } catch (_) {
+      return false;
+    }
+  }
 
   function taskTypeKey(value) {
     const source = String(value || '').trim().toLocaleLowerCase('ru').replace(/ё/g, 'е');
@@ -96,6 +105,7 @@
   }
 
   async function migrateLocalDataOnce() {
+    if (!isTeacherSession()) return false;
     const migration = localStudents();
     if (!migration) return false;
     const result = await studentsRef.transaction((current) => {
@@ -107,6 +117,7 @@
   }
 
   async function migrateHomeworkStructureOnce() {
+    if (!isTeacherSession()) return false;
     return studentsRef.transaction((current) => {
       if (!current) return current;
       let changed = false;
@@ -166,40 +177,51 @@
     });
   }
 
-  function grantCompletedHomeworkCoins(studentId) {
-    if (!studentId) return Promise.resolve(null);
-    return database.ref(`students/${studentId}`).transaction((student) => {
-      if (!student) return student;
-      let earned = 0;
-      Object.values(student.homeworks || {}).forEach((homework) => {
-        if (!homework || homework.status !== 'published' || homework.coinGranted === true) return;
-        const homeworkTasks = normalizeTasks(homework.tasks);
-        if (homeworkTasks.length && homeworkTasks.every(task => task.completed)) {
-          homework.coinGranted = true;
-          earned += 1;
-        }
-      });
-      if (!earned) return;
-      student.pet = student.pet || {};
-      student.pet.coinsBalance = (Number(student.pet.coinsBalance) || 0) + earned;
-      return student;
-    });
+  function addCoins(studentId, amount) {
+    if (!studentId || !amount) return Promise.resolve(null);
+    return database.ref(`students/${studentId}/pet/coinsBalance`).transaction((current) => (Number(current) || 0) + amount);
   }
 
-  function toggleTaskCompletionAndGrant(studentId, homeworkId, taskId) {
-    return database.ref(`students/${studentId}`).transaction((student) => {
-      const homework = student?.homeworks?.[homeworkId];
-      const task = homework?.tasks?.[taskId];
-      if (!task) return;
-      task.completed = !Boolean(task.completed);
+  async function grantHomeworkCoinIfEligible(studentId, homeworkId) {
+    if (!studentId || !homeworkId) return false;
+    const homeworkRef = database.ref(`students/${studentId}/homeworks/${homeworkId}`);
+    const snapshot = await homeworkRef.once('value');
+    const homework = snapshot.val();
+    if (!homework || homework.status !== 'published' || homework.coinGranted === true) return false;
+    const homeworkTasks = normalizeTasks(homework.tasks);
+    if (!homeworkTasks.length || !homeworkTasks.every(task => task.completed)) return false;
+
+    const flagResult = await homeworkRef.child('coinGranted').transaction((current) => current === true ? undefined : true);
+    if (!flagResult.committed) return false;
+    await addCoins(studentId, 1);
+    return true;
+  }
+
+  async function grantCompletedHomeworkCoins(studentId) {
+    if (!studentId) return 0;
+    const snapshot = await database.ref(`students/${studentId}/homeworks`).once('value');
+    const homeworks = snapshot.val() || {};
+    let earned = 0;
+
+    for (const [homeworkId, homework] of Object.entries(homeworks)) {
+      if (!homework || homework.status !== 'published' || homework.coinGranted === true) continue;
       const homeworkTasks = normalizeTasks(homework.tasks);
-      if (homework.status === 'published' && homework.coinGranted !== true && homeworkTasks.length && homeworkTasks.every(item => item.completed)) {
-        homework.coinGranted = true;
-        student.pet = student.pet || {};
-        student.pet.coinsBalance = (Number(student.pet.coinsBalance) || 0) + 1;
-      }
-      return student;
-    });
+      if (!homeworkTasks.length || !homeworkTasks.every(task => task.completed)) continue;
+      const flagResult = await database.ref(`students/${studentId}/homeworks/${homeworkId}/coinGranted`).transaction((current) => current === true ? undefined : true);
+      if (flagResult.committed) earned += 1;
+    }
+
+    if (earned) await addCoins(studentId, earned);
+    return earned;
+  }
+
+  async function toggleTaskCompletionAndGrant(studentId, homeworkId, taskId) {
+    const completedRef = database.ref(`students/${studentId}/homeworks/${homeworkId}/tasks/${taskId}/completed`);
+    const result = await completedRef.transaction((current) => !Boolean(current));
+    if (result.committed && result.snapshot.val() === true) {
+      await grantHomeworkCoinIfEligible(studentId, homeworkId);
+    }
+    return result;
   }
 
   window.FirebaseStore = { database, studentsRef, migrateLocalDataOnce, migrateHomeworkStructureOnce, grantCompletedHomeworkCoins, toggleTaskCompletionAndGrant, normalizeTasks, tasksToRecord, taskTypeKey, taskTypeImage };
